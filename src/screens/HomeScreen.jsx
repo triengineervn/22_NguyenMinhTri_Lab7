@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = ({ navigation }) => {
   const [isLoading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
 
@@ -46,20 +46,64 @@ const HomeScreen = ({ navigation, route }) => {
     );
   };
 
-  const ItemData = ({ name, address, image }) => {
+  const ItemData = ({ name, address, image, id, order, location }) => {
     return (
       <TouchableOpacity
         style={styles.item}
-        onPress={() => navigation.push("Details")}
+        onPress={() => navigation.push("Details", { data, id })}
       >
         <Image
           source={image}
           style={{ height: 120, width: "100%", borderRadius: 6 }}
         ></Image>
-        <View style={{ padding: 8 }}>
-          <View style={{ flexDirection: "row" }}>
-            <Text>Accepting Orders</Text>
-            <Text>5-10 minutes</Text>
+        <View style={{ padding: 8, width: "100%" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            {order === "Accepting Orders" ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  backgroundColor: "#F3F4F6",
+                  paddingHorizontal: 8,
+                }}
+              >
+                <AntDesign name="check" color={"#1DD75B"} size={20}></AntDesign>
+                <Text style={{ color: "#1DD75B", marginLeft: 8 }}>{order}</Text>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flexDirection: "row",
+                  backgroundColor: "#F3F4F6",
+                  paddingHorizontal: 8,
+                }}
+              >
+                <AntDesign name="lock" color={"#DE3B40"} size={20}></AntDesign>
+                <Text style={{ color: "#DE3B40", marginLeft: 8 }}>{order}</Text>
+              </View>
+            )}
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: "#F3F4F6",
+                paddingHorizontal: 8,
+              }}
+            >
+              <AntDesign
+                name="clockcircleo"
+                color={"#1DD75B"}
+                size={20}
+              ></AntDesign>
+              <Text style={{ color: "#DE3B40", marginLeft: 8 }}>
+                {location}
+              </Text>
+            </View>
+            <AntDesign
+              name="enviroment"
+              color={"#1DD75B"}
+              size={20}
+            ></AntDesign>
           </View>
           <Text style={styles.subtitle}>{name}</Text>
           <Text style={{ color: "gray" }}>{address}</Text>
@@ -67,7 +111,6 @@ const HomeScreen = ({ navigation, route }) => {
       </TouchableOpacity>
     );
   };
-
   return (
     <View style={styles.background}>
       <Header />
@@ -80,9 +123,12 @@ const HomeScreen = ({ navigation, route }) => {
             keyExtractor={({ id }) => id}
             renderItem={({ item }) => (
               <ItemData
+                id={item.id}
                 name={item.name}
                 address={item.address}
                 image={item.image}
+                order={item.order}
+                location={item.location}
               ></ItemData>
             )}
           />
@@ -101,6 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     paddingVertical: 24,
     alignItems: "center",
+    backgroundColor: "white",
   },
   margin: {
     margin: 14,
@@ -128,11 +175,5 @@ const styles = StyleSheet.create({
       primary: "#F1B000",
       underlineColor: "transparent",
     },
-  },
-  filter: {
-    paddingVertical: 8,
-    color: "#0C0606",
-    fontSize: 14,
-    fontWeight: 700,
   },
 });
